@@ -1,0 +1,88 @@
+const messageText = `سلام عليكم ورحمة الله وبركاته، طلاما بتشوفي الرسالة دي يبقى اترحمي عليا، أنا بجد مش متخيلة الرابط ده يوصلك لأني كنت متوقعة اعيش واقعد معاكِ اكتر من كدا، بس ربنا عمل اللي فيه الخير. . . أنا حبيت اوريكِ صورتي، أنا مش بتصور كتير لدرجة إن معايا صورة واحدة بس ليا وقديمة كمان، اللي خلاني احفظ الصورة إني شفت أمي حطاها خلفية لتلفونها؛ عمومًا صورتي هتشوفيها في الآخر، أنا مش حابة أوقف كتابة لأني حاسة بيكِ عايزاني مبطلش كتابة صح؟ ههههه طب اضحكِ طيب بطلي هبل أنا مستنياكِ في الجنة بلاش هبل بقى واضحكِ وريني الضحكة يبت أنتِ، يكلبة قلت اضحكِ، بحبك أوي 🥹💓. . أنا قاعدة أكتب الرسالة دي الفجر تقريبًا اهو وكل يوم هحاول أضيف فيها زيادة عشانك يقمرتي بحبك، الكلام ده كتبته يوم 9 سبتمبر الساعة 3:52AM بحبك.
+نفس اليوم "9 سبتمبر 3:59PM" صح الصورة اللي هتشوفيها تحت دي اتصورت في 2020 أو 2021 كدا مش فاكرة بالظبط، المهم أنا مش عارفة ليه قاعدة أحط فصلات وهمزات يختي الحياة مرة واحدة مش هكتب طبيعيي هكتب بالطريقة المريحة على قلبي زي انتي مش أنتِ فاهمة قصدي 🙂💘
+تيجي نلعب لعبة حجر ورقة مقص؟ يبقى انتي اول واحدة لعبت مع حد ميت بصي انا هختار حاجة وهتكون في مربع رمادي كدا عشان تشوفي انا اخترت ايه دوسي على المربع انا عارفة انها فكرة صعبة تتعمل بس اخويا هو اللي هيعمل مش أنا ف انا مش هتعب نيهيانيهههيهعيا يلا هعد ل3 واختاري ودوسي بعد ما تختاري على المربع يلا 1 2 3. __HIDDEN__
+ايوا صح النهاردة دخل في رجلي ازازة واتجرحت وبقيت عرجة ونايمة على السرير وامي النهاردة جابتلي فراااخ ورز على سريري كإني ملكة ههههههههه
+يلا بقى مستعدة تشوفي الدبشة؟
+مستعدة؟
+متأكدة؟
+لا لسة حساها مش حلوة
+حلوة؟
+اعععععععع بحبك
+اهي الصورة اهي
+
+
+🫣♥️`;
+const hiddenText = "مسدس نيهانيهانيها فزت";
+const wordDelay = 400;
+const afterMessageDelay = 1000;
+
+const message = document.getElementById("message");
+const photoFrame = document.getElementById("photoFrame");
+const photo = document.getElementById("photo");
+
+function buildMessage(text){
+  message.textContent = "";
+
+  for(const part of text.split(/(\s+)/)){
+    if(/\s+/.test(part)){
+      const s = document.createElement("span");
+      s.className = "space";
+      s.textContent = part;
+      message.appendChild(s);
+    }else if(part){
+      if(part === "__HIDDEN__"){
+        const spoiler = document.createElement("span");
+        spoiler.className = "hidden-spoiler";
+        spoiler.setAttribute("role","button");
+        spoiler.setAttribute("tabindex","0");
+        spoiler.setAttribute("aria-label","اضغط لإظهار النص المخفي");
+        spoiler.textContent = hiddenText;
+
+        const reveal = () => spoiler.classList.toggle("revealed");
+        spoiler.addEventListener("click", reveal);
+        spoiler.addEventListener("keydown", e => {
+          if(e.key === "Enter" || e.key === " "){
+            e.preventDefault();
+            reveal();
+          }
+        });
+
+        message.appendChild(spoiler);
+      }else{
+        const w = document.createElement("span");
+        w.className = "word";
+        w.textContent = part;
+        message.appendChild(w);
+      }
+    }
+  }
+}
+
+function startTyping(){
+  // المربع عنصر في نفس تسلسل الكلمات، لذلك يظهر عند مكانه الحقيقي.
+  const sequence = [...message.querySelectorAll(".word, .hidden-spoiler")];
+  const spoiler = message.querySelector(".hidden-spoiler");
+
+  sequence.forEach((item,index)=>{
+    setTimeout(()=>{
+      if(item === spoiler){
+        // يظهر المربع الرمادي فقط، والنص داخله يظل مخفيًا تمامًا.
+        item.classList.add("ready");
+      }else{
+        item.classList.add("visible");
+      }
+    }, index * wordDelay);
+  });
+
+  const last = Math.max(0,(sequence.length - 1) * wordDelay);
+
+  setTimeout(()=>{
+    photoFrame.classList.add("show");
+    photoFrame.setAttribute("aria-hidden","false");
+  }, last + 500 + afterMessageDelay);
+}
+
+photo.addEventListener("error",()=>photoFrame.remove());
+
+buildMessage(messageText);
+startTyping();

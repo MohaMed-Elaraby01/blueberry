@@ -1,0 +1,44 @@
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:#000}
+body{min-height:100svh;overflow-x:hidden;color:#fff;font-family:Tahoma,Arial,sans-serif}
+.page{width:100%;min-height:100svh;padding:10vh 15px 45px;display:flex;flex-direction:column;align-items:center;gap:34px}
+.message{width:min(900px,100%);text-align:center;font-size:clamp(19px,5vw,33px);line-height:1.95;font-weight:700;overflow-wrap:anywhere;color:#fff;text-shadow:0 0 2px rgba(255,255,255,.9),0 0 5px rgba(255,255,255,.28)}
+.word{display:inline-block;opacity:0;transform:translateY(6px);filter:blur(4px)}
+.word.visible{animation:wordIn .36s ease forwards}
+@keyframes wordIn{to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.space{white-space:pre}
+
+/* Discord-style spoiler: the text itself is NOT visible or blurred.
+   Only the gray box is visible. */
+.hidden-spoiler{
+  display:inline-block;
+  vertical-align:middle;
+  min-width:145px;
+  min-height:1.25em;
+  padding:1px 9px;
+  background:#4b4b4b;
+  color:transparent;
+  border-radius:4px;
+  cursor:pointer;
+  user-select:none;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  text-shadow:none;
+  transition:background .15s ease,opacity .2s ease;
+}
+.hidden-spoiler.ready{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.hidden-spoiler:hover{background:#555}
+.hidden-spoiler.revealed{color:#fff}
+
+.photo-frame{display:none;width:min(560px,92vw);padding:7px;border:1px solid rgba(255,255,255,.9);background:#000;box-shadow:0 0 5px rgba(255,255,255,.7),0 0 14px rgba(255,255,255,.35),0 0 25px rgba(255,255,255,.15)}
+.photo-frame.show{display:block;animation:frameIn .9s ease forwards}
+.photo-frame img{display:block;width:100%;max-height:70svh;object-fit:contain;opacity:0}
+.photo-frame.show img{animation:imageIn 1s ease .15s forwards}
+@keyframes frameIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes imageIn{to{opacity:1}}
+@media(max-width:600px){.page{padding:9vh 12px 38px;gap:28px}.message{font-size:clamp(18px,5.4vw,26px);line-height:1.9}.photo-frame{width:92vw;padding:6px}}
